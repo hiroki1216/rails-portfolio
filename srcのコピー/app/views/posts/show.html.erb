@@ -1,0 +1,83 @@
+<div class="container">
+  
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title"><%= @post.title %></h3>    
+        <p class="card-subtitle mb-2 text-muted">投稿者:<%= @post.user.username %></p>
+        <p class="card-text"><%= @post.contents %></p>
+        <a href="#" class="card-link"><%= @post.category.name %></a>
+         <% if current_user.id == @post.user_id then %>
+          <%= link_to "更新する" ,edit_post_path(@post),class:"card-link" %> 
+          <%= link_to "削除する" ,post_path(@post),method: :delete,data: { confirm: "Are you sure?" },class:"card-link" %> 
+        <% else %>
+        <% end %>
+        <div class="row">
+          <div><% if current_user.liked_by?(@post) %>
+            <%= form_with model: current_user.likes.find_by(post_id: @post.id), method: :delete do |form| %>
+              <%= form.hidden_field :post_id, value: @post.id %>
+              <%= form.submit 'Unlike',class:"btn btn-primary" %><%= @post.likes.count %> 
+            <% end %>
+          <% else %>
+            <%= form_with model: current_user.likes.new do |form| %>
+              <%= form.hidden_field :post_id, value: @post.id %>
+              <%= form.submit 'like',class:"btn btn-primary" %><%= @post.likes.count %> 
+            <% end %>
+          <% end %>
+        </div> 
+        <br>
+        <br>
+        <div>
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+            コメントする！
+          </button>
+        </div>
+        
+        </div>
+        <div class="collapse" id="collapseComment">
+          <%= form_with model:[@post, @comment] do |form|  %>
+          <div>
+            <%= form.label :comment_content,class:"form-label" %><br>
+            <%= form.text_area :comment_content, placeholder: 'コメントを記入してください。',class:"form-control"%><br>
+            <% @comment.errors.full_messages_for(:comment_content).each do |message| %>
+              <div><%= message %></div>
+            <% end %>
+            <%= form.hidden_field :post_id, value: @post.id %>
+          </div>
+          <div>
+            <%= form.submit "送信",class:"btn btn-primary" %>
+          </div>
+         <% end %>
+        </div>
+    </div>
+  </div>   
+    <div class="card">
+      <div class="card-header">
+        コメント
+      </div>      
+      <ul class="list-group list-group-flush">
+        <% @comments.each do |comment| %>
+          <li class="list-group-item">
+          <%= comment.user.username %><br>
+          <%= comment.comment_content %>
+          <span class="text-muted">
+            <%= comment.created_at %>
+          </span>
+        </li>
+        <% end %>  
+      </ul>
+    </div>
+  <div class="card">
+    <div class="card-header">
+      投稿をいいねしたユーザー
+    </div>
+    <ul class="list-group list-group-flush">
+      <% @users.each do |user| %>
+        <li class="list-group-item">
+        <%= user.username %>
+      </li>
+      <% end %>  
+    </ul>
+  </div>
+  
+   
+  </div> 

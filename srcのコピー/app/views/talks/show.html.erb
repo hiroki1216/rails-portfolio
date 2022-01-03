@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header">トーク参加中のユーザー</div>
+        <ul class="list-group list-group-flush">
+            <% @members.each do |member| %>
+                <li class="list-group-item">
+                    <%= member.username %>
+                </li>
+            <% end %>  
+        </ul>
+    </div>
+    <div class="card">
+        <div class="card-header">メッセージ一覧</div>
+        <ul class="list-group list-group-flush">
+            <% if @messages.empty? %>
+                <li class="list-group-item">メッセージがありません。</li>
+            <% else %>
+                <% @messages.each do |message| %>
+                    <li class="list-group-item">
+                        <%= message.user.username %>:
+                        <%= message.content %><br>
+                        <%= message.created_at %><br>
+                        <% if message.user_id==current_user.id %>
+                            <%= link_to "削除",talk_message_path(@talk, id: message.id),method: :delete,data: { confirm: "Are you sure?" } %>
+                        <% end %>
+                    </li>
+                <% end %> 
+            <% end %> 
+        </ul>
+    </div>
+    <div>
+        <%= form_with model: [@talk,@message] do |form| %>
+            <%= form.label :content,class:"form-label" %><br>
+            <%= form.text_area :content, placeholder: 'メッセージを入力してください。',class:"form-control"%><br>
+            <% @message.errors.full_messages_for(:content).each do |message| %>
+            <div><%= message %></div>
+            <% end %>
+            <%= form.hidden_field :talk_id, value: @talk.id %>
+            <%= form.hidden_field :user_id, value: current_user.id %>
+            <%= form.submit "送信",class:"btn btn-primary" %>
+        <% end %>
+   
+        
+    </div>
+</div>
+    
+
+
+
+
+

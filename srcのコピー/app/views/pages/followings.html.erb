@@ -1,0 +1,29 @@
+<div class="container">
+<% unless @user.id == current_user.id %>
+   <% if current_user.following?(@user) && @user.following?(current_user)  %>
+     <% if @target_talk.present? %>
+       <%= link_to talk_path(@target_talk) do %>
+         <button class="btn btn-primary">既存トークへ</button>
+       <% end %>
+     <% else %>
+       <%= form_with model: @talk do |form| %>
+       <%= form.hidden_field :user_id, value: @user.id %>
+       <%= form.submit '新規トークへ',class:"btn btn-primary" %>
+     <% end %>
+     <% end %> 
+   <% end %>
+<% end %>
+</div>
+</br>
+<%= render "userpage", 
+  user: @user,
+  posts: @posts,
+  like_posts: @like_posts,
+  following_users: @following_users, 
+  page_title: "フォロー中ユーザーのページです。",
+  post_list: "following's posts",
+  favorite_post_list: "following's favorite posts",
+  following_post_list: "following's followings"
+ %>
+
+ 

@@ -1,0 +1,79 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-1">
+      <% if user.avatar? %>
+      <span>
+        <%= image_tag user.avatar.url,size: '100x100',class: 'rounded-circle'%> 
+      </span>
+    <% else %>
+      <span>
+        <%= image_tag 'default.png',size: '100x100',class: 'rounded-circle'%> 
+      </span>
+    <% end %>
+    </div>
+    <div class="col-sm-11">
+      <h1 class="mt-1 mb-3"><%= user.username %>さんのページ</h1>
+      <p><%= page_title %></p>
+    </div>
+  </div>
+
+  <div class="card-group">
+    <div class="card border-dark" style="width: 18rem;">
+      <img src="https://thumb.ac-illust.com/fa/fa13a598858c6e83a5ffc2b6f93c3543_w.jpeg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h4 class="card-title">投稿一覧</h4>
+        <h5 class="card-subtitle mb-2 text-muted"><%= post_list %></h5>
+        <ul class="list-group list-group-flush">
+          <% posts.each do |post| %>
+            <li > 
+             <%= link_to post.title, post,class:"list-group-item" %>
+           </li>
+          <% end %>  
+        </ul>
+      </div>
+    </div>
+    
+    <div class="card border-dark" style="width: 18rem;">
+      <img src="https://thumb.ac-illust.com/fa/fa13a598858c6e83a5ffc2b6f93c3543_w.jpeg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h4 class="card-title">お気に入りの投稿</h4>
+        <h5 class="card-subtitle mb-2 text-muted"><%= favorite_post_list %></h5>
+        <ul class="list-group list-group-flush">
+          <% like_posts.each do |like_post| %>
+            <li>
+             <%= link_to like_post.title, like_post,class:"list-group-item"%>
+           </li>
+          <% end %>  
+        </ul>
+      </div>    
+    </div>
+    
+    <div class="card border-dark" style="width: 18rem;">
+      <img src="https://thumb.ac-illust.com/fa/fa13a598858c6e83a5ffc2b6f93c3543_w.jpeg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h4 class="card-title">フォロー中ユーザー</h4>
+        <h5 class="card-subtitle mb-2 text-muted"><%= following_post_list %></h5>
+        <ul class="list-group list-group-flush">
+          <% following_users.each do |following_user| %>
+            <li>
+              <div class="list-group-item"> 
+                <% if following_user.avatar? %>
+                  <%= image_tag following_user.avatar.url,size: '20x20',class: 'rounded-circle'%> 
+                <% else %>
+                  <%= image_tag 'default.png',size: '20x20',class: 'rounded-circle'%> 
+                <% end %>
+                <% if following_user.id==current_user.id %>
+                  <%= link_to current_user.username, pages_show_path %>
+                <% else %>
+                  <%= link_to following_user.username, pages_followings_path(id: following_user.id) %>
+                <% end %>
+              </div>
+           </li>
+          <% end %>  
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>
