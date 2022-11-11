@@ -17,7 +17,7 @@ class MessagesController < ApplicationController
     @message=Message.find_by(id: params[:id])
     if @message.destroy
       redirect_back(fallback_location: root_path)
-    elses
+    else
       redirect_back(fallback_location: root_path)
     end
   end
